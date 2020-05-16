@@ -1,3 +1,7 @@
+// Copyright 2018 Your Name <your_email>
+
+#include <header.hpp>
+
 boost::recursive_mutex mutex;
 boost::asio::io_service service;
 class talk_to_client;
@@ -68,10 +72,13 @@ public:
         std::string msg(buff_, pos);
         std::copy(buff_ + already_read_, buff_ + MAX_MSG, buff_);
         already_read_ = 0;
-        if ( msg.find("login ") == 0) on_login(msg);
-        else if ( msg.find("ping") == 0) on_ping();
-        else if ( msg.find("ask_clients") == 0) on_clients();
-        else {
+        if (msg.find("login ") == 0) {
+            on_login(msg);
+        } else if (msg.find("ping") == 0) {
+            on_ping();
+        } else if (msg.find("ask_clients") == 0) {
+            on_clients();
+        } else {
             std::cerr << "invalid msg " << msg << std::endl;
         }
     }
