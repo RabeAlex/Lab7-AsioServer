@@ -1,7 +1,3 @@
-// Copyright 2018 Your Name <your_email>
-
-#include <header.hpp>
-
 boost::recursive_mutex mutex;
 boost::asio::io_service service;
 class talk_to_client;
@@ -17,7 +13,7 @@ private:
     bool clients_changed_;
     boost::posix_time::ptime last_ping;
 public:
-    explicit talk_to_client()
+    talk_to_client()
         : sock_(service), already_read_(0),
          last_ping(boost::posix_time::microsec_clock::local_time())
     {}
@@ -47,7 +43,7 @@ public:
     bool timed_out() const {
         boost::posix_time::ptime now =
          boost::posix_time::microsec_clock::local_time();
-        long long ms = (now - last_ping).total_milliseconds();
+        int64_t ms = (now - last_ping).total_milliseconds();
         return ms > 5000;
     }
 
@@ -75,7 +71,9 @@ public:
         if ( msg.find("login ") == 0) on_login(msg);
         else if ( msg.find("ping") == 0) on_ping();
         else if ( msg.find("ask_clients") == 0) on_clients();
-        else std::cerr << "invalid msg " << msg << std::endl;
+        else {
+            std::cerr << "invalid msg " << msg << std::endl;
+        }
     }
 
     void on_login(const std::string & msg) {
